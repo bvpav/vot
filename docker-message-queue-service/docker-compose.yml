@@ -14,3 +14,12 @@ services:
       - db
     environment:
       - SQLALCHEMY_DATABASE_URI=postgresql://postgres:example@db:5432/postgres
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
