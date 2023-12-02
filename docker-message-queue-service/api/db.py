@@ -1,14 +1,14 @@
-import flask_sqlalchemy
-import sqlalchemy.orm
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-class Base(sqlalchemy.orm.DeclarativeBase):
+class Base(DeclarativeBase, MappedAsDataclass):
     pass
 
 
-db = flask_sqlalchemy.SQLAlchemy(model_class=Base)
+db = SQLAlchemy(model_class=Base)
 
 
 class Video(db.Model):
@@ -16,11 +16,3 @@ class Video(db.Model):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     url: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(255), nullable=False)
-
-    def to_json(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'url': self.url,
-            'description': self.description,
-        }

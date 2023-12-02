@@ -1,4 +1,6 @@
 import os
+from dataclasses import asdict
+
 import flask
 
 from db import db, Video
@@ -12,7 +14,7 @@ db.init_app(app)
 @app.get('/videos')
 def list_videos():
     videos = db.session.execute(db.select(Video)).scalars()
-    return [video.to_json() for video in videos]
+    return [asdict(video) for video in videos]
 
 
 @app.post('/videos')
@@ -24,7 +26,7 @@ def create_video():
     )
     db.session.add(video)
     db.session.commit()
-    return video.to_json()
+    return asdict(video)
 
 
 @app.get('/videos/<int:video_id>')
@@ -32,12 +34,10 @@ def get_video(video_id):
     video = db.session.execute(db.select(Video).where(Video.id == video_id)).scalar()
     if video is None:
         return {'error': 'Video not found'}, 404
-    return video.to_json()
+    return asdict(video)
 
 
 def main():
-    # while True:
-    #     pass
     with app.app_context():
         db.create_all()
     app.run(host='0.0.0.0', port=8080)
