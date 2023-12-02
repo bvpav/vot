@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+
+  api:
+    build: api
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:example@db:5432/postgres
+
+  adminer:
+    image: adminer
+    ports:
+      - 8081:8080
