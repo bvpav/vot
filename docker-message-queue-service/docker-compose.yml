@@ -14,8 +14,3 @@ services:
       - db
     environment:
       - SQLALCHEMY_DATABASE_URI=postgresql://postgres:example@db:5432/postgres
-
-  adminer:
-    image: adminer
-    ports:
-      - 8081:8080
