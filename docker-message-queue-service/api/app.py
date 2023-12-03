@@ -2,23 +2,27 @@ import os
 
 import flask
 
-
-def create_app():
-    app = flask.Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
-
-    from db import db
-    db.init_app(app)
-
-    from videos import videos
-    app.register_blueprint(videos, url_prefix='/videos')
-
-    with app.app_context():
-        db.create_all()
-
-    return app
+import rpc
 
 
+app = flask.Flask(__name__)
 
-if __name__ == '__main__':
-    main()
+
+@app.get('/videos')
+def list_videos():
+    return rpc.list_videos()
+
+
+@app.post('/videos')
+def create_video():
+    return rpc.create_video(
+        url=flask.request.json['url'],
+    )
+
+
+@app.get('/videos/<int:video_id>')
+def get_video(video_id):
+    video = rpc.get_video(id=video_id)
+    if video is None:
+        return {'error': 'Video not found'}, 404
+    return video
