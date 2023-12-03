@@ -5,18 +5,28 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: example
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./videos/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
 
   api:
     build: api
+    restart: unless-stopped
     ports:
       - 8080:8080
     depends_on:
+      - rabbitmq
+
+  videos:
+    build: videos
+    restart: unless-stopped
+    depends_on:
       - db
-    environment:
-      - SQLALCHEMY_DATABASE_URI=postgresql://postgres:example@db:5432/postgres
+      - rabbitmq
 
   rabbitmq:
     image: rabbitmq:3.12-management
+    restart: always
     ports:
       - 15672:15672
       - 5672:5672
