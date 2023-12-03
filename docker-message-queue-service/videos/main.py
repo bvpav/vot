@@ -30,7 +30,7 @@ psql_conn = psycopg2.connect(
 
 def on_request_list_videos(ch, method, props, body):
     print('list_videos')
-    response = list_videos(psql_conn, )
+    response = list_videos(psql_conn)
     ch.basic_publish(
         exchange='',
         routing_key=props.reply_to,
