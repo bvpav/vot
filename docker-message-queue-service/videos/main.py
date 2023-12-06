@@ -1,4 +1,3 @@
-
 import json
 import pika
 from videos import get_video, list_videos, create_video, update_video
@@ -74,7 +73,7 @@ def on_request_update_video(ch, method, props, body):
         exchange='',
         routing_key=props.reply_to,
         properties=pika.BasicProperties(correlation_id=props.correlation_id),
-        body=response.model_dump_json() if response else 'nu'
+        body=response.model_dump_json() if response else 'null'
     )
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
